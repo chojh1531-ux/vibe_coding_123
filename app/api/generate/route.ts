@@ -69,7 +69,7 @@ export async function POST(req: Request) {
     const parsedData = JSON.parse(cleanJson);
 
     return NextResponse.json({ success: true, data: parsedData });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[Gemini API Error]', error);
     return NextResponse.json(
       { error: 'AI 맞춤 일정을 생성하는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.' },

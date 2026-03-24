@@ -3,11 +3,29 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
+interface Activity {
+  time: string;
+  title: string;
+  description: string;
+}
+
+interface DayItem {
+  day: string;
+  date: string;
+  activities: Activity[];
+}
+
+interface ItineraryData {
+  summary: string;
+  tips: string[];
+  items: DayItem[];
+}
+
 function ResultContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<ItineraryData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -39,7 +57,7 @@ function ResultContent() {
         } else {
           setError(result.error || '알 수 없는 에러가 발생했습니다.');
         }
-      } catch (err) {
+      } catch {
         setError('서버 연결 중 오류가 발생했습니다.');
       } finally {
         setLoading(false);
@@ -102,7 +120,7 @@ function ResultContent() {
           🗺️ 상세 일정
         </h2>
         
-        {data?.items?.map((dayItem: any, dayIdx: number) => (
+        {data?.items?.map((dayItem, dayIdx) => (
           <div key={dayIdx} className="mb-6">
             <div className="flex items-baseline gap-3 mb-6">
               <h3 className="text-3xl font-bold text-white">{dayItem.day}</h3>
@@ -110,7 +128,7 @@ function ResultContent() {
             </div>
             
             <div className="flex flex-col gap-4 pl-2 md:pl-4 border-l-2 border-white/20 ml-2">
-              {dayItem.activities?.map((activity: any, actIdx: number) => (
+              {dayItem.activities?.map((activity, actIdx) => (
                 <div key={actIdx} className="relative flex flex-col md:flex-row gap-4 bg-black border border-white/10 p-6 rounded-2xl hover:bg-white/5 transition-all group ml-6">
                   {/* Timeline Dot */}
                   <div className="absolute top-1/2 -translate-y-1/2 -left-9 w-4 h-4 rounded-full bg-black border-2 border-white group-hover:bg-white transition-colors"></div>
